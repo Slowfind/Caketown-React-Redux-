@@ -1,0 +1,9 @@
+// Переопределение дефолтных значений переменных Bootstrap 4 и определение своих
+@import "../scss/custom-bootstrap/bootstrap-reboot.css";
+@import "../scss/custom-bootstrap/bootstrap-grid.css";
+
+// Подключение дефолтных
+@import "default/global";
+
+// Подключение своих SCSS файлов
+@import "my";
