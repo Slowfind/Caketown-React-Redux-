@@ -14,11 +14,19 @@ import {
 
 function Cart() {
     const dispatch = useDispatch()
-    const { totalPrice, totalCount, items } = useSelector(({ cart }) => cart)
+    const {
+        totalPrice,
+        totalCount,
+        items,
+        totalIdCount,
+        totalIdPrice,
+    } = useSelector(({ cart }) => cart)
 
-    const addCakes = Object.keys(items).map((key) => {
-        return items[key].items[0]
-    })
+    const allArrCakes = Object.keys(items).map((i, _) => items[i])
+
+    const addCakes = [].concat.apply([], allArrCakes)
+
+    const arrItemsIndex = Object.keys(addCakes).map((i, _) => i)
 
     const onClearCart = () => {
         if (window.confirm('Вы действительно хотите очистить корзину')) {
@@ -64,19 +72,19 @@ function Cart() {
                                 </div>
                                 <div className="cart">
                                     <div className="cart__grid">
-                                        {addCakes.map((obj) => (
+                                        {addCakes.map((obj, index) => (
                                             <CartItem
-                                                id={obj.id}
-                                                key={obj.id}
+                                                id={obj.uniqId}
+                                                key={arrItemsIndex[index]}
                                                 name={obj.name}
                                                 type={obj.type}
                                                 size={obj.size}
                                                 image={obj.image}
                                                 totalPrice={
-                                                    items[obj.id].totalPrice
+                                                    totalIdPrice[obj.uniqId]
                                                 }
                                                 totalCount={
-                                                    items[obj.id].items.length
+                                                    totalIdCount[obj.uniqId]
                                                 }
                                                 onRemove={onRemoveItem}
                                                 onPlus={onPlusItem}

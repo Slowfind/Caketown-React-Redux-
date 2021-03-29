@@ -1,6 +1,6 @@
 const initialState = {
     items: [],
-    isLoaded: false
+    isLoaded: false,
 }
 
 const cakes = (state = initialState, action) => {
@@ -9,7 +9,7 @@ const cakes = (state = initialState, action) => {
             return {
                 ...state,
                 items: action.payload,
-                isLoaded: true
+                isLoaded: true,
             }
         case 'SET_LOADED':
             return {

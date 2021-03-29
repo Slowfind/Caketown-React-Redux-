@@ -8,6 +8,7 @@ import Loading from '../components/Card/Loading'
 
 import { setCategory, setSortBy } from '../redux/actions/filters'
 import { fetchCakes } from '../redux/actions/cakes'
+import { addCakesToCart } from '../redux/actions/cart'
 
 const categoryNames = [
     'День рождения',
@@ -24,12 +25,12 @@ const sortItems = [
 function Home() {
     const dispatch = useDispatch()
     const items = useSelector(({ cakes }) => cakes.items)
-    const cartItems = useSelector(({ cart }) => cart.items)
+    const cart = useSelector(({ cart }) => cart)
     const isLoaded = useSelector(({ cakes }) => cakes.isLoaded)
     const { category, sortBy } = useSelector(({ filters }) => filters)
-
+    // console.log(cart, 'cart')
     React.useEffect(() => {
-        dispatch(fetchCakes(sortBy, category))
+        return dispatch(fetchCakes(sortBy, category))
     }, [category, sortBy])
 
     const onSelectCategory = React.useCallback((index) => {
@@ -38,14 +39,15 @@ function Home() {
 
     const onSelectSortType = React.useCallback((type) => {
         dispatch(setSortBy(type))
+        return () => {
+            dispatch(setSortBy(type))
+        }
     }, [])
 
     const handleAddCakesToCart = (obj) => {
-        dispatch({
-            type: 'ADD_CAKES_CART',
-            payload: obj,
-        })
+        dispatch(addCakesToCart(obj))
     }
+
     return (
         <>
             <section className="section section--category">
@@ -73,15 +75,12 @@ function Home() {
                     <h1 className="section__header">Все торты</h1>
                     <div className="row">
                         {isLoaded
-                            ? items.map((obj) => (
+                            ? items.map((obj, i) => (
                                   <Card
                                       onClickAddCakes={handleAddCakesToCart}
                                       {...obj}
                                       key={obj.id}
-                                      addedCount={
-                                          cartItems[obj.id] &&
-                                          cartItems[obj.id].items.length
-                                      }
+                                      addedCount={cart.totalBtnCount[obj.id]}
                                   />
                               ))
                             : Array(items.length)

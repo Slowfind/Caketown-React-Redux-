@@ -15,7 +15,7 @@ function Card(props) {
     } = props
     const typeNames = ['1 ярус', '2 ярус']
     const sizeNames = [26, 30, 40]
-
+    // console.log(addedCount, 'd')
     const [activeType, setActiveType] = useState(types[0])
     const [activeSize, setActiveSize] = useState(sizes[0])
 
