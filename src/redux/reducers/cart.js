@@ -69,19 +69,32 @@ const cart = (state = initialState, action) => {
         }
 
         case 'REMOVE_CART_ITEM': {
-            const newItems = {
+            const id = action.payload
+            const newProduct = {
                 ...state.items,
             }
-            console.log(action.payload)
-            const currentTotalPrice = newItems[action.payload].totalPrice
-            const currentTotalCount = newItems[action.payload].items.length
-            delete newItems[action.payload]
+
+            const y = state.totalIdPrice[id]
+            const x = state.totalIdCount[id]
+
+            let countBtn = state.totalBtnCount[newProduct[id].id] - x
+
+            state.totalBtnCount[newProduct[id].id] = countBtn
+            if (state.totalBtnCount[newProduct[id].id] === 0) {
+                state.totalBtnCount[newProduct[id].id] = undefined
+            }
+            delete state.totalIdCount[id]
+            delete state.totalIdPrice[id]
+            delete newProduct[id]
 
             return {
                 ...state,
-                items: newItems,
-                totalPrice: state.totalPrice - currentTotalPrice,
-                totalCount: state.totalCount - currentTotalCount,
+                items: newProduct,
+                totalPrice: state.totalPrice - y,
+                totalCount: state.totalCount - x,
+                totalIdPrice: state.totalIdPrice,
+                totalIdCount: state.totalIdCount,
+                totalBtnCount: state.totalBtnCount,
             }
         }
         case 'MINUS_CART_ITEM': {
