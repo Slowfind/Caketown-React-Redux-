@@ -29,15 +29,7 @@ const cart = (state = initialState, action) => {
                 [product.uniqId]: product,
             }
             const total = Object.keys(newProduct).map((key) => newProduct[key]) // [{},{},...{}]
-
-            const totalBtnCount = total.reduce((acc, entry) => {
-                const id = entry.id
-
-                if (acc[id] !== undefined) acc[id] += entry.count
-                else acc[id] = entry.count
-
-                return acc
-            }, {})
+            console.log(total, 'total')
             const totalIdPrice = total.reduce((acc, entry) => {
                 const id = entry.uniqId
                 if (acc[id] !== undefined) acc[id] = entry.price
@@ -56,6 +48,14 @@ const cart = (state = initialState, action) => {
                 (sum, obj) => obj.price * obj.count + sum,
                 0
             )
+            const totalBtnCount = total.reduce((acc, entry) => {
+                const id = entry.id
+
+                if (acc[id] !== undefined) acc[id] += entry.count
+                else acc[id] = entry.count
+
+                return acc
+            }, {})
 
             return {
                 ...state,
@@ -64,7 +64,7 @@ const cart = (state = initialState, action) => {
                 totalCount: state.totalCount + 1,
                 totalIdPrice,
                 totalIdCount,
-                totalBtnCount: totalBtnCount,
+                totalBtnCount,
             }
         }
 
@@ -98,62 +98,58 @@ const cart = (state = initialState, action) => {
             }
         }
         case 'MINUS_CART_ITEM': {
-            const oldItems = state.items[action.payload].items
-            const newObjItems =
-                oldItems.length > 1
-                    ? state.items[action.payload].items.slice(1)
-                    : oldItems
-            const newItems = {
+            const id = action.payload
+            const newProduct = {
                 ...state.items,
-                [action.payload]: {
-                    items: newObjItems,
-                    totalPrice: getTotalPrice(newObjItems),
-                },
             }
 
-            const totalCount = Object.keys(newItems).reduce(
-                (sum, key) => newItems[key].items.length + sum,
-                0
-            )
-            const totalPrice = Object.keys(newItems).reduce(
-                (sum, key) => newItems[key].totalPrice + sum,
-                0
-            )
+            if (state.totalIdCount[id] > 1) {
+                newProduct[id].count = newProduct[id].count - 1
+                state.totalIdCount[id] = state.totalIdCount[id] - 1
+                state.totalCount = state.totalCount - 1
+                state.totalBtnCount[newProduct[id].id] =
+                    state.totalBtnCount[newProduct[id].id] - 1
+                state.totalIdPrice[id] =
+                    state.totalIdPrice[id] - newProduct[id].price
+                state.totalPrice = state.totalPrice - newProduct[id].price
+            }
 
             return {
                 ...state,
-                items: newItems,
-                totalCount,
-                totalPrice,
+                items: newProduct,
+                totalPrice: state.totalPrice,
+                totalCount: state.totalCount,
+                totalIdPrice: state.totalIdPrice,
+                totalIdCount: state.totalIdCount,
+                totalBtnCount: state.totalBtnCount,
             }
         }
         case 'PLUS_CART_ITEM': {
-            const newObjItems = [
-                ...state.items[action.payload].items,
-                state.items[action.payload].items[0],
-            ]
-            const newItems = {
+            const id = action.payload
+            // console.log(state, 'state')
+            const newProduct = {
                 ...state.items,
-                [action.payload]: {
-                    items: newObjItems,
-                    totalPrice: getTotalPrice(newObjItems),
-                },
             }
+            console.log(state.totalIdCount, 'значение до')
+            const nt = state.totalIdCount
+            console.log(nt, 'значение после')
+            console.log(state.totalBtnCount, 'state.totalBtnCount')
 
-            const totalCount = Object.keys(newItems).reduce(
-                (sum, key) => newItems[key].items.length + sum,
-                0
-            )
-            const totalPrice = Object.keys(newItems).reduce(
-                (sum, key) => newItems[key].totalPrice + sum,
-                0
-            )
+            state.totalBtnCount[newProduct[id].id] =
+                state.totalBtnCount[newProduct[id].id] + 1
+            state.totalIdCount[id] = state.totalIdCount[id] + 1
+            newProduct[id].count = newProduct[id].count + 1
+            state.totalIdPrice[id] =
+                state.totalIdPrice[id] + newProduct[id].price
 
             return {
                 ...state,
-                items: newItems,
-                totalCount,
-                totalPrice,
+                items: newProduct,
+                totalPrice: state.totalPrice + newProduct[id].price,
+                totalCount: state.totalCount + 1,
+                totalIdPrice: state.totalIdPrice,
+                totalIdCount: state.totalIdCount,
+                totalBtnCount: state.totalBtnCount,
             }
         }
         case 'CLEAR_CART':
@@ -161,6 +157,9 @@ const cart = (state = initialState, action) => {
                 items: {},
                 totalPrice: 0,
                 totalCount: 0,
+                totalIdPrice: 0,
+                totalIdCount: 0,
+                totalBtnCount: 0,
             }
         default:
             return state
