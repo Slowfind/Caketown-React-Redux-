@@ -28,7 +28,7 @@ function Home() {
     const cart = useSelector(({ cart }) => cart)
     const isLoaded = useSelector(({ cakes }) => cakes.isLoaded)
     const { category, sortBy } = useSelector(({ filters }) => filters)
-    // console.log(cart, 'cart')
+
     React.useEffect(() => {
         return dispatch(fetchCakes(sortBy, category))
     }, [category, sortBy])

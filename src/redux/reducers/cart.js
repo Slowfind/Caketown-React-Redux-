@@ -7,8 +7,6 @@ const initialState = {
     totalBtnCount: 0,
 }
 
-const getTotalPrice = (arr) => arr.reduce((sum, obj) => obj.price + sum, 0)
-
 const cart = (state = initialState, action) => {
     switch (action.type) {
         case 'ADD_CAKES_CART': {
@@ -16,6 +14,7 @@ const cart = (state = initialState, action) => {
             const uniqId = (product) => {
                 return `id${product.id}_${product.type}_${product.size}`
             }
+            console.log(product)
             product.uniqId = uniqId(product)
 
             product.count = 1
@@ -29,7 +28,7 @@ const cart = (state = initialState, action) => {
                 [product.uniqId]: product,
             }
             const total = Object.keys(newProduct).map((key) => newProduct[key]) // [{},{},...{}]
-            console.log(total, 'total')
+
             const totalIdPrice = total.reduce((acc, entry) => {
                 const id = entry.uniqId
                 if (acc[id] !== undefined) acc[id] = entry.price
@@ -126,15 +125,9 @@ const cart = (state = initialState, action) => {
         }
         case 'PLUS_CART_ITEM': {
             const id = action.payload
-            // console.log(state, 'state')
             const newProduct = {
                 ...state.items,
             }
-            console.log(state.totalIdCount, 'значение до')
-            const nt = state.totalIdCount
-            console.log(nt, 'значение после')
-            console.log(state.totalBtnCount, 'state.totalBtnCount')
-
             state.totalBtnCount[newProduct[id].id] =
                 state.totalBtnCount[newProduct[id].id] + 1
             state.totalIdCount[id] = state.totalIdCount[id] + 1

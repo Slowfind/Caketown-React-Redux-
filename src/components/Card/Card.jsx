@@ -15,9 +15,11 @@ function Card(props) {
     } = props
     const typeNames = ['1 ярус', '2 ярус']
     const sizeNames = [26, 30, 40]
-    // console.log(addedCount, 'd')
+
     const [activeType, setActiveType] = useState(types[0])
     const [activeSize, setActiveSize] = useState(sizes[0])
+
+    let [itemPrice, setItemPrice] = useState(price[activeSize])
 
     const onSelectType = (index) => {
         setActiveType(index)
@@ -25,13 +27,15 @@ function Card(props) {
 
     const onSelectSize = (index) => {
         setActiveSize(index)
+        setItemPrice(price[index])
     }
+
     const onAddCakes = () => {
         const obj = {
             id,
             name,
             image,
-            price,
+            price: itemPrice,
             size: sizeNames[activeSize],
             type: typeNames[activeType],
         }
@@ -76,7 +80,12 @@ function Card(props) {
                     </ul>
                 </div>
                 <div className="card__footer">
-                    <div className="card__price">от {price} ₽</div>
+                    <div className="card__price">
+                        {activeType === 1
+                            ? (itemPrice = itemPrice + 200)
+                            : itemPrice}
+                        &nbsp;₽
+                    </div>
                     <Button onClick={onAddCakes} outline card>
                         Добавить {addedCount && <span>{addedCount}</span>}
                     </Button>

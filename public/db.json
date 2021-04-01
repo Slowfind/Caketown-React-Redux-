@@ -6,7 +6,7 @@
             "name": "Красный бархат",
             "types": [0, 1],
             "sizes": [2],
-            "price": 590,
+            "price": [null, null, 590],
             "category": 4,
             "rating": 9
         },
@@ -16,7 +16,7 @@
             "name": "Звездная ночь",
             "types": [0, 1],
             "sizes": [0],
-            "price": 990,
+            "price": [990, null, null],
             "category": 2,
             "rating": 8
         },
@@ -26,7 +26,7 @@
             "name": "Клубничный рай",
             "types": [0, 1],
             "sizes": [0, 1, 2],
-            "price": 690,
+            "price": [690, 890, 1190],
             "category": 2,
             "rating": 7
         },
@@ -36,7 +36,7 @@
             "name": "Роджественаская сказка",
             "types": [0, 1],
             "sizes": [0, 1, 2],
-            "price": 780,
+            "price": [780, 920, 1200],
             "category": 3,
             "rating": 6
         },
@@ -44,9 +44,9 @@
             "id": 5,
             "image": "./cakes/pic5.png",
             "name": "Радуга",
-            "types": [1],
+            "types": [0, 1],
             "sizes": [1, 2],
-            "price": 420,
+            "price": [null, 720, 1090],
             "category": 3,
             "rating": 5
         },
@@ -56,7 +56,7 @@
             "name": "Фруктовый букет",
             "types": [0],
             "sizes": [0, 2],
-            "price": 1120,
+            "price": [620, null, 1020],
             "category": 1,
             "rating": 4
         },
@@ -66,7 +66,7 @@
             "name": "Розовые грезы",
             "types": [0, 1],
             "sizes": [2],
-            "price": 570,
+            "price": [null, null, 920],
             "category": 0,
             "rating": 3
         },
@@ -76,7 +76,7 @@
             "name": "Космос",
             "types": [0, 1],
             "sizes": [0, 1, 2],
-            "price": 899,
+            "price": [790, 1130, 1400],
             "category": 1,
             "rating": 2
         }
