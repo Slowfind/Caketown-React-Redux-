@@ -31,18 +31,24 @@ function Home() {
 
     React.useEffect(() => {
         return dispatch(fetchCakes(sortBy, category))
-    }, [category, sortBy])
+    }, [category, dispatch, sortBy])
 
-    const onSelectCategory = React.useCallback((index) => {
-        dispatch(setCategory(index))
-    }, [])
+    const onSelectCategory = React.useCallback(
+        (index) => {
+            dispatch(setCategory(index))
+        },
+        [dispatch]
+    )
 
-    const onSelectSortType = React.useCallback((type) => {
-        dispatch(setSortBy(type))
-        return () => {
+    const onSelectSortType = React.useCallback(
+        (type) => {
             dispatch(setSortBy(type))
-        }
-    }, [])
+            return () => {
+                dispatch(setSortBy(type))
+            }
+        },
+        [dispatch]
+    )
 
     const handleAddCakesToCart = (obj) => {
         dispatch(addCakesToCart(obj))

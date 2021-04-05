@@ -14,10 +14,9 @@ const cart = (state = initialState, action) => {
             const uniqId = (product) => {
                 return `id${product.id}_${product.type}_${product.size}`
             }
-            console.log(product)
-            product.uniqId = uniqId(product)
-
+            product.uniqId = uniqId(product).replace(' ', '_')
             product.count = 1
+
             for (let key in state.items) {
                 if (state.items[key].uniqId === product.uniqId) {
                     product.count = state.items[key].count + 1
@@ -27,32 +26,28 @@ const cart = (state = initialState, action) => {
                 ...state.items,
                 [product.uniqId]: product,
             }
-            const total = Object.keys(newProduct).map((key) => newProduct[key]) // [{},{},...{}]
 
-            const totalIdPrice = total.reduce((acc, entry) => {
-                const id = entry.uniqId
-                if (acc[id] !== undefined) acc[id] = entry.price
-                else acc[id] = entry.price * entry.count
+            const arrNewProduct = Object.values(newProduct)
 
+            const totalIdPrice = arrNewProduct.reduce((acc, entry) => {
+                acc[entry.uniqId] = entry.price * entry.count
                 return acc
             }, {})
 
-            const totalIdCount = total.reduce((acc, entry) => {
-                const id = entry.uniqId
-                acc[id] = entry.count
-
+            const totalIdCount = arrNewProduct.reduce((acc, entry) => {
+                acc[[entry.uniqId]] = entry.count
                 return acc
             }, {})
-            const totalPrice = total.reduce(
+
+            const totalPrice = arrNewProduct.reduce(
                 (sum, obj) => obj.price * obj.count + sum,
                 0
             )
-            const totalBtnCount = total.reduce((acc, entry) => {
-                const id = entry.id
 
-                if (acc[id] !== undefined) acc[id] += entry.count
-                else acc[id] = entry.count
-
+            const totalBtnCount = arrNewProduct.reduce((acc, entry) => {
+                acc[entry.id] !== undefined
+                    ? (acc[entry.id] += entry.count)
+                    : (acc[entry.id] = entry.count)
                 return acc
             }, {})
 
@@ -73,10 +68,11 @@ const cart = (state = initialState, action) => {
                 ...state.items,
             }
 
-            const y = state.totalIdPrice[id]
-            const x = state.totalIdCount[id]
+            const prevTotalIdPrice = state.totalIdPrice[id]
+            const prevTotalIdCount = state.totalIdCount[id]
 
-            let countBtn = state.totalBtnCount[newProduct[id].id] - x
+            let countInItem = state.totalBtnCount[newProduct[id].id]
+            let countBtn = countInItem - prevTotalIdCount
 
             state.totalBtnCount[newProduct[id].id] = countBtn
             if (state.totalBtnCount[newProduct[id].id] === 0) {
@@ -89,8 +85,8 @@ const cart = (state = initialState, action) => {
             return {
                 ...state,
                 items: newProduct,
-                totalPrice: state.totalPrice - y,
-                totalCount: state.totalCount - x,
+                totalPrice: state.totalPrice - prevTotalIdPrice,
+                totalCount: state.totalCount - prevTotalIdCount,
                 totalIdPrice: state.totalIdPrice,
                 totalIdCount: state.totalIdCount,
                 totalBtnCount: state.totalBtnCount,
@@ -101,16 +97,13 @@ const cart = (state = initialState, action) => {
             const newProduct = {
                 ...state.items,
             }
-
             if (state.totalIdCount[id] > 1) {
-                newProduct[id].count = newProduct[id].count - 1
-                state.totalIdCount[id] = state.totalIdCount[id] - 1
-                state.totalCount = state.totalCount - 1
-                state.totalBtnCount[newProduct[id].id] =
-                    state.totalBtnCount[newProduct[id].id] - 1
-                state.totalIdPrice[id] =
-                    state.totalIdPrice[id] - newProduct[id].price
-                state.totalPrice = state.totalPrice - newProduct[id].price
+                newProduct[id].count -= 1
+                state.totalIdCount[id] -= 1
+                state.totalCount -= 1
+                state.totalBtnCount[newProduct[id].id] -= 1
+                state.totalIdPrice[id] -= newProduct[id].price
+                state.totalPrice -= newProduct[id].price
             }
 
             return {
@@ -128,12 +121,10 @@ const cart = (state = initialState, action) => {
             const newProduct = {
                 ...state.items,
             }
-            state.totalBtnCount[newProduct[id].id] =
-                state.totalBtnCount[newProduct[id].id] + 1
-            state.totalIdCount[id] = state.totalIdCount[id] + 1
-            newProduct[id].count = newProduct[id].count + 1
-            state.totalIdPrice[id] =
-                state.totalIdPrice[id] + newProduct[id].price
+            state.totalBtnCount[newProduct[id].id] += 1
+            state.totalIdCount[id] += 1
+            newProduct[id].count += 1
+            state.totalIdPrice[id] += newProduct[id].price
 
             return {
                 ...state,

@@ -3,10 +3,8 @@ export const setLoaded = (payload) => ({
     payload,
 })
 
-export const fetchCakes = (sortBy, category) => (dispatch) => {
-    dispatch(setLoaded(false))
-
-    fetch(
+export const fetchCakes = (sortBy, category) => async (dispatch) => {
+    await fetch(
         `http://localhost:3001/cakes?${
             category !== null ? `category=${category}` : ''
         }&_sort=${sortBy.type}&_order=${sortBy.order}`
