@@ -4,15 +4,18 @@ export const setLoaded = (payload) => ({
 })
 
 export const fetchCakes = (sortBy, category) => async (dispatch) => {
-    await fetch(
+    dispatch(setLoaded(false))
+    const response = await fetch(
         `http://localhost:3001/cakes?${
             category !== null ? `category=${category}` : ''
         }&_sort=${sortBy.type}&_order=${sortBy.order}`
     )
-        .then((response) => response.json())
-        .then((result) => {
-            dispatch(setCakes(result))
-        })
+    const json = await response.json()
+    console.log(json)
+    setTimeout(() => {
+        dispatch(setLoaded(true))
+        dispatch(setCakes(json))
+    }, 1000)
 }
 
 export const setCakes = (items) => ({

@@ -28,7 +28,6 @@ function Home() {
     const cart = useSelector(({ cart }) => cart)
     const isLoaded = useSelector(({ cakes }) => cakes.isLoaded)
     const { category, sortBy } = useSelector(({ filters }) => filters)
-
     React.useEffect(() => {
         return dispatch(fetchCakes(sortBy, category))
     }, [category, dispatch, sortBy])
@@ -89,7 +88,7 @@ function Home() {
                                       addedCount={cart.totalBtnCount[obj.id]}
                                   />
                               ))
-                            : Array(items.length)
+                            : Array(8)
                                   .fill(0)
                                   .map((_, index) => <Loading key={index} />)}
                     </div>
