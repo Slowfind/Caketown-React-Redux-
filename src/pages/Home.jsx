@@ -89,7 +89,7 @@ function Home() {
                                       addedCount={cart.totalBtnCount[obj.id]}
                                   />
                               ))
-                            : Array(items.length)
+                            : Array(8)
                                   .fill(0)
                                   .map((_, index) => <Loading key={index} />)}
                     </div>

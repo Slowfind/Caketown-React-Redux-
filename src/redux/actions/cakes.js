@@ -11,7 +11,6 @@ export const fetchCakes = (sortBy, category) => async (dispatch) => {
         }&_order=${sortBy.order}`
     )
     const json = await response.json()
-    console.log(json)
     setTimeout(() => {
         dispatch(setLoaded(true))
         dispatch(setCakes(json))
